@@ -24,12 +24,14 @@ CarBase::CarBase()
 			mileage = stoi(str_part);
 			std::getline(car_stream, str_part, ';');
 			fines_quantity = stoi(str_part);
+			Car car(car_id, plate_number, human_name, model, mileage, fines_quantity);
+			car_base.push_back(car);
 		}
 	}
 	file.close();
-	file.open("password.txt");
-	std::getline(file, password);
-	file.close();
+	//file.open("password.txt");
+	//std::getline(file, password);
+	//file.close();
 }
 
 size_t CarBase::GetSize() const
@@ -40,20 +42,6 @@ size_t CarBase::GetSize() const
 std::string CarBase::GetFileName() const
 {
 	return filename;
-}
-
-std::string CarBase::GetPassword() const
-{
-	return password;
-}
-
-void CarBase::SetPassword(std::string password)
-{
-	this->password = password;
-	std::ofstream file;
-	file.open("password.txt");
-	file << password;
-	file.close();
 }
 
 void CarBase::SaveToFile()
@@ -81,8 +69,7 @@ void CarBase::AllPrint() const
 			car_base[i].GetHumanName() << " " << \
 			car_base[i].GetModel() << " " << \
 			car_base[i].GetMileage() << " " << \
-			car_base[i].GetMileage() << " " << \
-			car_base[i].GetFinesQuantity();
+			car_base[i].GetFinesQuantity() << std::endl;
 	}
 }
 
@@ -97,8 +84,7 @@ void CarBase::PrintById(int car_id) const
 				car_base[i].GetHumanName() << " " << \
 				car_base[i].GetModel() << " " << \
 				car_base[i].GetMileage() << " " << \
-				car_base[i].GetMileage() << " " << \
-				car_base[i].GetFinesQuantity();
+				car_base[i].GetFinesQuantity() << std::endl;
 		}
 	}
 }
