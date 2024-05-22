@@ -1,1 +1,1 @@
-color F2
+color 06

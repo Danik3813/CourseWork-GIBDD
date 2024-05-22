@@ -19,4 +19,6 @@ public:
 	void ChangePassword(Menu& menu, CarBase& car_base);
 	void SetColor(Menu& menu, const char* color);
 	void ChangeColor(Menu& menu, CarBase& car_base, const char access);
+	void MenuSort(Menu& menu, CarBase& car_base);
+	void MenuTypeSort(Menu& menu, CarBase& car_base, std::string field_name);
 };
