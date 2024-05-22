@@ -7,7 +7,7 @@ CarBase::CarBase()
 	std::ifstream file;
 	file.open(filename);
 	std::string car_line;
-	try
+	try 
 	{
 		if (file.is_open()) {
 			while (std::getline(file, car_line))
@@ -45,9 +45,8 @@ CarBase::CarBase()
 	}
 	catch (std::exception ex)
 	{
-		std::cout << "Проблемы с чтением файла! Исправьте принудительно" << std::endl;
+		std::cout << "Файл не считан или пуст. Закройте программу принудительно или данные будут удалены!" << std::endl;
 		system("pause");
-		exit(0);
 	}
 	file.close();
 }
