@@ -22,6 +22,5 @@ public:
 	void EditCar(int car_id, Car car);
 	void DeleteCarById(int car_id);
 	void Clear();
-
 	void GetSorted(std::string field_name, char type);
 };

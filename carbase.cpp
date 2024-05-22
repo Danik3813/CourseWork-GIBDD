@@ -7,38 +7,47 @@ CarBase::CarBase()
 	std::ifstream file;
 	file.open(filename);
 	std::string car_line;
-	if (file.is_open()) {
-		while (std::getline(file, car_line))
-		{
-			std::stringstream car_stream(car_line);
-			std::string str_part;
+	try
+	{
+		if (file.is_open()) {
+			while (std::getline(file, car_line))
+			{
+				std::stringstream car_stream(car_line);
+				std::string str_part;
 
-			std::getline(car_stream, str_part, ';');
-			car_id = stoi(str_part);
+				std::getline(car_stream, str_part, ';');
+				car_id = stoi(str_part);
 
-			std::getline(car_stream, str_part, ';');
-			plate_number = str_part;
+				std::getline(car_stream, str_part, ';');
+				plate_number = str_part;
 
-			std::getline(car_stream, str_part, ';');
-			surname = str_part;
+				std::getline(car_stream, str_part, ';');
+				surname = str_part;
 
-			std::getline(car_stream, str_part, ';');
-			name = str_part;
+				std::getline(car_stream, str_part, ';');
+				name = str_part;
 
-			std::getline(car_stream, str_part, ';');
-			father_name = str_part;
+				std::getline(car_stream, str_part, ';');
+				father_name = str_part;
 
-			std::getline(car_stream, str_part, ';');
-			model = str_part;
+				std::getline(car_stream, str_part, ';');
+				model = str_part;
 
-			std::getline(car_stream, str_part, ';');
-			mileage = stoi(str_part);
+				std::getline(car_stream, str_part, ';');
+				mileage = stoi(str_part);
 
-			std::getline(car_stream, str_part, ';');
-			fines_quantity = stoi(str_part);
-			Car car(car_id, plate_number, name, surname, father_name, model, mileage, fines_quantity);
-			car_base.push_back(car);
+				std::getline(car_stream, str_part, ';');
+				fines_quantity = stoi(str_part);
+				Car car(car_id, plate_number, name, surname, father_name, model, mileage, fines_quantity);
+				car_base.push_back(car);
+			}
 		}
+	}
+	catch (std::exception ex)
+	{
+		std::cout << "Проблемы с чтением файла! Исправьте принудительно" << std::endl;
+		system("pause");
+		exit(0);
 	}
 	file.close();
 }
@@ -95,6 +104,7 @@ void CarBase::PrintById(int car_id) const
 {
 	for (size_t i = 0; i < car_base.size(); i++)
 	{
+		if (car_id == -1) break;
 		if (car_base[i].GetCarId() == car_id)
 		{
 			std::cout << car_base[i].GetCarId() << " " << \
