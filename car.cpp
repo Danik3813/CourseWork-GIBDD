@@ -1,12 +1,15 @@
 #include "car.h"
 
-Car::Car(int car_id, std::string plate_number, std::string name, std::string surname, std::string father_name, std::string model, int mileage, int fines_quantity)
+Car::Car(int car_id, std::string plate_number,\
+	std::string name, std::string surname, std::string father_name,\
+	std::string brand, std::string model, int mileage, int fines_quantity)
 {
 	this->car_id = car_id;
 	this->plate_number = plate_number;
 	this->name = name;
 	this->surname = surname;
 	this->father_name = father_name;
+	this->brand = brand;
 	this->model = model;
 	this->mileage = mileage;
 	this->fines_quantity = fines_quantity;
@@ -40,6 +43,11 @@ std::string Car::GetSurname() const
 std::string Car::GetFatherName() const
 {
 	return father_name;
+}
+
+std::string Car::GetBrand() const
+{
+	return brand;
 }
 
 std::string Car::GetModel() const

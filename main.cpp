@@ -8,4 +8,5 @@ int main()
 	CarBase car_base;
 	Menu menu;
 	menu.Start(menu, car_base);
+	return 0;
 }

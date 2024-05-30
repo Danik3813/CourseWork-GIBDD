@@ -2,20 +2,33 @@
 #include <iostream>
 //глобальные переменные
 int choice, car_id, mileage, fines_quantity;
-std::string input_choice, input_car_id, plate_number, name, surname, father_name, model, input_password, input_mileage, input_fines_quantity;
+std::string input_choice, input_car_id, plate_number,\
+name, surname, father_name,\
+brand, model,\
+input_password, input_mileage, input_fines_quantity;
 
 Menu::Menu()
 {
 	//Чтение пароля
-	std::ifstream file;
-	file.open("config/password.txt");
+	std::fstream file("config/password.txt");
+	file.open("password.txt");
 	std::getline(file, password);
+	if (password.length() == 0) 
+	{
+		password = "adm";
+		file << password;
+	}
 	file.close();
 	password_status = false;
 	//Чтение цвета
 	file.open("config/color.txt");
 	std::string color;
 	std::getline(file, color);
+	if (color.length() == 0)
+	{
+		color = "color 0F";
+		file << color;
+	}
 	file.close();
 	const char* p_color = color.c_str();
 	system(p_color);
@@ -173,7 +186,7 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 		else {
 			car_id = car_base.GetSize() + 1;
 		}
-		Car car(car_id, plate_number, name, surname, father_name, model, mileage, fines_quantity);
+		Car car(car_id, plate_number, name, surname, father_name, brand, model, mileage, fines_quantity);
 		car_base.AddCar(car);
 		system("pause");
 		menu.AdminMenu(menu, car_base);
@@ -198,7 +211,7 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 		car_base.PrintById(car_id);
 		std::cout << "Новые данные об автомобиле" << std::endl;
 		menu.AddInfo(menu, car_base);
-		Car car(car_id, plate_number, name, surname, father_name, model, mileage, fines_quantity);
+		Car car(car_id, plate_number, name, surname, father_name, brand, model, mileage, fines_quantity);
 		car_base.EditCar(car_id, car);
 		system("pause");
 		menu.AdminMenu(menu, car_base);
@@ -274,6 +287,9 @@ void Menu::AddInfo(Menu& menu, CarBase& car_base)
 	std::cout << "Введите отчество владельца: " << std::endl << ">> ";;
 	std::cin >> father_name;
 	if (father_name == "quit") menu.AdminMenu(menu, car_base);
+	std::cout << "Введите марку автомобиля: " << std::endl << ">> ";;
+	std::cin >> brand;
+	if (brand == "quit") menu.AdminMenu(menu, car_base);
 	std::cout << "Введите модель автомобиля: " << std::endl << ">> ";;
 	std::cin >> model;
 	if (model == "quit") menu.AdminMenu(menu, car_base);
@@ -419,8 +435,11 @@ void Menu::MenuSort(Menu& menu, CarBase& car_base)
 {
 	system("cls");
 	menu.MenuName();
-	std::cout << "Выберите поле сортировки" << std::endl << "1. Регистрационный номер" << std::endl << "2. Фамилия" << std::endl << "3. Имя" << std::endl << "4. Отчество"\
-		<< std::endl << "5. Модель" << std::endl << "6. Пробег" << std::endl << "7. Число штрафов" << std::endl << "8. Назад" << std::endl << ">> ";
+	std::cout << "Выберите поле сортировки"\
+		<< std::endl << "1. Регистрационный номер" << std::endl << "2. Фамилия"\
+		<< std::endl << "3. Имя" << std::endl << "4. Отчество"\
+		<< std::endl << "5. Марка" << std::endl << "6. Модель" << std::endl << "7. Пробег"\
+		<< std::endl << "8. Число штрафов" << std::endl << "9. Назад" << std::endl << ">> ";
 	std::cin >> input_choice;
 	try
 	{
@@ -447,15 +466,17 @@ void Menu::MenuSort(Menu& menu, CarBase& car_base)
 		menu.MenuTypeSort(menu, car_base, "father_name");
 		break;
 	case 5:
+		menu.MenuTypeSort(menu, car_base, "brand");
+	case 6:
 		menu.MenuTypeSort(menu, car_base, "model");
 		break;
-	case 6:
+	case 7:
 		menu.MenuTypeSort(menu, car_base, "mileage");
 		break;
-	case 7:
+	case 8:
 		menu.MenuTypeSort(menu, car_base, "fines_quantity");
 		break;
-	case 8:
+	case 9:
 		menu.AdminMenu(menu, car_base);
 		break;
 	default:
@@ -470,8 +491,10 @@ void Menu::MenuSort(Menu& menu, CarBase& car_base)
 void Menu::MenuTypeSort(Menu& menu, CarBase& car_base, std::string field_name)
 {
 	system("cls");
-	std::cout << "Сортировка по полю: " << field_name << std::endl << "1. По возрастанию" << std::endl << "2. По убыванию" << std::endl << \
-		"3. Назад" << std::endl << ">> ";
+	std::cout << "Сортировка по полю: "\
+		<< field_name << std::endl <<\
+		"1. По возрастанию" << std::endl << "2. По убыванию"\
+		<< std::endl << "3. Назад" << std::endl << ">> ";
 	std::cin >> input_choice;
 	try
 	{

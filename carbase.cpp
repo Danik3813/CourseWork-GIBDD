@@ -3,7 +3,7 @@ CarBase::CarBase()
 {
 	filename = "carbase.csv";
 	int car_id, mileage, fines_quantity;
-	std::string plate_number, name, surname, father_name, model;
+	std::string plate_number, name, surname, father_name, model, brand;
 	std::ifstream file;
 	file.open(filename);
 	std::string car_line;
@@ -31,6 +31,9 @@ CarBase::CarBase()
 				father_name = str_part;
 
 				std::getline(car_stream, str_part, ';');
+				brand = str_part;
+
+				std::getline(car_stream, str_part, ';');
 				model = str_part;
 
 				std::getline(car_stream, str_part, ';');
@@ -38,14 +41,14 @@ CarBase::CarBase()
 
 				std::getline(car_stream, str_part, ';');
 				fines_quantity = stoi(str_part);
-				Car car(car_id, plate_number, name, surname, father_name, model, mileage, fines_quantity);
+				Car car(car_id, plate_number, name, surname, father_name, brand, model, mileage, fines_quantity);
 				car_base.push_back(car);
 			}
 		}
 	}
 	catch (std::exception ex)
 	{
-		std::cout << "Файл не считан или пуст. Закройте программу принудительно или данные будут удалены!" << std::endl;
+		std::cout << "Проблемы со считыванием. Закройте программу принудительно или данные будут удалены!" << std::endl;
 		system("pause");
 	}
 	file.close();
@@ -77,6 +80,7 @@ void CarBase::SaveToFile()
 			car_base[i].GetSurname() + ";" + \
 			car_base[i].GetName() + ";" + \
 			car_base[i].GetFatherName() + ";" + \
+			car_base[i].GetBrand() + ";" + \
 			car_base[i].GetModel() + ";" + \
 			std::to_string(car_base[i].GetMileage()) + ";" + \
 			std::to_string(car_base[i].GetFinesQuantity()) << std::endl;
@@ -86,13 +90,14 @@ void CarBase::SaveToFile()
 
 void CarBase::AllPrint() const
 {
-	for (size_t i = 0; i < car_base.size(); i++)
+	for (int i = 0; i < car_base.size(); i++)
 	{
 		std::cout << car_base[i].GetCarId() << " " << \
 			car_base[i].GetPlateNumber() << " " << \
 			car_base[i].GetSurname() << " " << \
 			car_base[i].GetName() << " " << \
 			car_base[i].GetFatherName() << " " << \
+			car_base[i].GetBrand() << " " << \
 			car_base[i].GetModel() << " " << \
 			car_base[i].GetMileage() << " " << \
 			car_base[i].GetFinesQuantity() << std::endl;
@@ -101,7 +106,7 @@ void CarBase::AllPrint() const
 
 void CarBase::PrintById(int car_id) const
 {
-	for (size_t i = 0; i < car_base.size(); i++)
+	for (int i = 0; i < car_base.size(); i++)
 	{
 		if (car_id == -1) break;
 		if (car_base[i].GetCarId() == car_id)
@@ -111,6 +116,7 @@ void CarBase::PrintById(int car_id) const
 				car_base[i].GetSurname() << " " << \
 				car_base[i].GetName() << " " << \
 				car_base[i].GetFatherName() << " " << \
+				car_base[i].GetBrand() << " " << \
 				car_base[i].GetModel() << " " << \
 				car_base[i].GetMileage() << " " << \
 				car_base[i].GetFinesQuantity() << std::endl;
@@ -125,7 +131,7 @@ void CarBase::AddCar(Car car)
 
 void CarBase::EditCar(int car_id, Car car)
 {
-	for (size_t i = 0; i < car_base.size(); i++)
+	for (int i = 0; i < car_base.size(); i++)
 	{
 		if (car_id == car_base[i].GetCarId()) car_base[i] = car;
 	}
@@ -134,7 +140,7 @@ void CarBase::EditCar(int car_id, Car car)
 void CarBase::DeleteCarById(int car_id)
 {
 	car_base.erase(car_base.begin() + car_id - 1);
-	for (size_t i = 0; i < car_base.size(); i++)
+	for (int i = 0; i < car_base.size(); i++)
 	{
 		car_base[i].SetCarId(i + 1);
 	}
@@ -148,73 +154,82 @@ void CarBase::Clear()
 //логические функции для сортировки
 static bool sortByPlateNumberUpper(const Car left, const Car right)
 {
-	return left.GetPlateNumber() > right.GetPlateNumber();
+	return left.GetPlateNumber() < right.GetPlateNumber();
 }
 
 static bool sortByPlateNumberLower(const Car left, const Car right)
 {
-	return left.GetPlateNumber() < right.GetPlateNumber();
+	return left.GetPlateNumber() > right.GetPlateNumber();
 }
 
 static bool sortByNameUpper(const Car left, const Car right)
 {
-	return left.GetName() > right.GetName();
+	return left.GetName() < right.GetName();
 }
 
 static bool sortByNameLower(const Car left, const Car right)
 {
-	return left.GetName() < right.GetName();
+	return left.GetName() > right.GetName();
 }
 
 static bool sortBySurnameUpper(const Car left, const Car right)
 {
-	return left.GetSurname() > right.GetSurname();
+	return left.GetSurname() < right.GetSurname();
 }
 
 static bool sortBySurnameLower(const Car left, const Car right)
 {
-	return left.GetSurname() < right.GetSurname();
+	return left.GetSurname() > right.GetSurname();
 }
 
 static bool sortByFatherNameUpper(const Car left, const Car right)
 {
-	return left.GetFatherName() > right.GetFatherName();
+	return left.GetFatherName() < right.GetFatherName();
 }
 
 static bool sortByFatherNameLower(const Car left, const Car right)
 {
-	return left.GetFatherName() < right.GetFatherName();
+	return left.GetFatherName() > right.GetFatherName();
 }
 
+static bool sortByBrandUpper(const Car left, const Car right)
+{
+	return left.GetBrand() < right.GetBrand();
+}
+
+static bool sortByBrandLower(const Car left, const Car right)
+{
+	return left.GetBrand() > right.GetBrand();
+}
 
 static bool sortByModelUpper(const Car left, const Car right)
-{
-	return left.GetModel() > right.GetModel();
-}
-
-static bool sortByModelLower(const Car left, const Car right)
 {
 	return left.GetModel() < right.GetModel();
 }
 
-static bool sortByMileageUpper(const Car left, const Car right)
+static bool sortByModelLower(const Car left, const Car right)
 {
-	return left.GetMileage() > right.GetMileage();
+	return left.GetModel() > right.GetModel();
 }
 
-static bool sortByMileageLower(const Car left, const Car right)
+static bool sortByMileageUpper(const Car left, const Car right)
 {
 	return left.GetMileage() < right.GetMileage();
 }
 
+static bool sortByMileageLower(const Car left, const Car right)
+{
+	return left.GetMileage() > right.GetMileage();
+}
+
 static bool sortByFinesQuantityUpper(const Car left, const Car right)
 {
-	return left.GetFinesQuantity() > right.GetFinesQuantity();
+	return left.GetFinesQuantity() < right.GetFinesQuantity();
 }
 
 static bool sortByFinesQuantityLower(const Car left, const Car right)
 {
-	return left.GetFinesQuantity() < right.GetFinesQuantity();
+	return left.GetFinesQuantity() > right.GetFinesQuantity();
 }
 
 void CarBase::GetSorted(std::string field_name, char type)
@@ -259,14 +274,24 @@ void CarBase::GetSorted(std::string field_name, char type)
 		std::sort(begin(car_base), end(car_base), sortByFatherNameLower);
 	}
 
+	if (field_name == "brand" && type == 'U')
+	{
+		std::sort(begin(car_base), end(car_base), sortByBrandUpper);
+	}
+
+	if (field_name == "brand" && type == 'L')
+	{
+		std::sort(begin(car_base), end(car_base), sortByBrandLower);
+	}
+
 	if (field_name == "model" && type == 'U')
 	{
-		std::sort(begin(car_base), end(car_base), sortByModelLower);
+		std::sort(begin(car_base), end(car_base), sortByModelUpper);
 	}
 
 	if (field_name == "model" && type == 'L')
 	{
-		std::sort(begin(car_base), end(car_base), sortByModelUpper);
+		std::sort(begin(car_base), end(car_base), sortByModelLower);
 	}
 
 	if (field_name == "mileage" && type == 'U')
