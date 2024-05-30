@@ -309,6 +309,11 @@ void Menu::AddInfo(Menu& menu, CarBase& car_base)
 		system("pause");
 		menu.AdminMenu(menu, car_base);
 	}
+	if (mileage < 0) {
+		std::cout << "Пробег не может быть отрицательным!" << std::endl;
+		system("pause");
+		menu.AdminMenu(menu, car_base);
+	}
 	std::cout << "Введите число полученных штрафов: " << std::endl << ">> ";
 	std::cin >> input_fines_quantity;
 	try
@@ -318,6 +323,11 @@ void Menu::AddInfo(Menu& menu, CarBase& car_base)
 	catch (std::exception ex)
 	{
 		std::cout << "Вы ввели не число!" << std::endl;
+		system("pause");
+		menu.AdminMenu(menu, car_base);
+	}
+	if (fines_quantity < 0) {
+		std::cout << "Число штрафов не может быть отрицательным!" << std::endl;
 		system("pause");
 		menu.AdminMenu(menu, car_base);
 	}
