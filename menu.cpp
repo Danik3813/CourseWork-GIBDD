@@ -1,5 +1,5 @@
 #include "menu.h"
-#include <iostream>
+
 //глобальные переменные
 int choice, car_id, mileage, fines_quantity;
 std::string input_choice, input_car_id, plate_number,\
@@ -11,24 +11,22 @@ Menu::Menu()
 {
 	//Чтение пароля
 	std::fstream file("config/password.txt");
-	file.open("password.txt");
 	std::getline(file, password);
-	if (password.length() == 0) 
-	{
+	/*if (password.length() == 0 && file.is_open()) {
 		password = "adm";
 		file << password;
-	}
+	}*/
 	file.close();
 	password_status = false;
 	//Чтение цвета
 	file.open("config/color.txt");
 	std::string color;
 	std::getline(file, color);
-	if (color.length() == 0)
+	/*if (color.length() == 0)
 	{
 		color = "color 0F";
 		file << color;
-	}
+	}*/
 	file.close();
 	const char* p_color = color.c_str();
 	system(p_color);
@@ -50,6 +48,7 @@ void Menu::Start(Menu& menu, CarBase& car_base) {
 	}
 	catch (std::exception ex)
 	{
+		system("cls");
 		std::cout << "Вы ввели не число!" << std::endl;
 		system("pause");
 		menu.Start(menu, car_base);
@@ -74,13 +73,39 @@ void Menu::Start(Menu& menu, CarBase& car_base) {
 	}
 }
 
+void Menu::InputCarId()
+{
+	std::cout << "Введите идентификатор" << std::endl << ">> ";
+	std::cin >> input_car_id;
+	try
+	{
+		car_id = stoi(input_car_id);
+	}
+	catch (std::exception ex)
+	{
+		std::cout << "Вы ввели не число!" << std::endl;
+	}
+}
+
+void Menu::NoneCarId(Menu& menu, CarBase& car_base, char type)
+{
+	if (car_id > car_base.GetSize() || car_id < 1) {
+		std::cout << "Нет элемента с таким идентификатором!" << std::endl;
+		system("pause");
+		if (type == 'A') menu.AdminMenu(menu, car_base);
+		else menu.UserMenu(menu, car_base);
+	}
+}
+
 void Menu::UserMenu(Menu& menu, CarBase& car_base)
 {
 	system("cls");
-	car_id = -1;
 	std::cout << "Режим работы: пользователь" << std::endl \
-		<< "1. Вывести информацию о всех автомобилях" << std::endl << "2. Вывести информацию об одном автомобиле" << std::endl << "3. Изменить цветовую схему" \
-		<< std::endl << "4. Назад" << std::endl << ">> ";
+		<< "1. Вывести информацию о всех автомобилях" << std::endl\
+		<< "2. Вывести информацию об одном автомобиле" << std::endl\
+		<< "3. Отсортировать список" << std::endl\
+		<< "4. Изменить цветовую схему" << std::endl\
+		<< "5. Назад" << std::endl << ">> ";
 	std::cin >> input_choice;
 	try
 	{
@@ -102,24 +127,20 @@ void Menu::UserMenu(Menu& menu, CarBase& car_base)
 		break;
 	case 2:
 		system("cls");
-		std::cout << "Введите идентификатор" << std::endl << ">> ";
-		std::cin >> input_car_id;
-		try
-		{
-			car_id = stoi(input_car_id);
-		}
-		catch (std::exception ex)
-		{
-			std::cout << "Вы ввели не число!" << std::endl;
-		}
+		car_id = -1;
+		menu.InputCarId();
+		menu.NoneCarId(menu, car_base, 'U');
 		car_base.PrintById(car_id);
 		system("pause");
 		menu.UserMenu(menu, car_base);
 		break;
 	case 3:
-		menu.ChangeColor(menu, car_base, 'U');
+		menu.MenuSort(menu, car_base, 'U');
 		break;
 	case 4:
+		menu.ChangeColor(menu, car_base, 'U');
+		break;
+	case 5:
 		menu.Start(menu, car_base);
 		break;
 	default:
@@ -162,16 +183,9 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 		break;
 	case 2:
 		system("cls");
-		std::cout << "Введите идентификатор" << std::endl << ">> ";
-		std::cin >> input_car_id;
-		try
-		{
-			car_id = stoi(input_car_id);
-		}
-		catch (std::exception ex)
-		{
-			std::cout << "Вы ввели не число!" << std::endl;
-		}
+		car_id = -1;
+		menu.InputCarId();
+		menu.NoneCarId(menu, car_base, 'A');
 		car_base.PrintById(car_id);
 		system("pause");
 		menu.AdminMenu(menu, car_base);
@@ -186,7 +200,10 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 		else {
 			car_id = car_base.GetSize() + 1;
 		}
-		Car car(car_id, plate_number, name, surname, father_name, brand, model, mileage, fines_quantity);
+		Car car(car_id, plate_number,\
+			name, surname, father_name,\
+			brand, model,\
+			mileage, fines_quantity);
 		car_base.AddCar(car);
 		system("pause");
 		menu.AdminMenu(menu, car_base);
@@ -195,18 +212,12 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 	case 4: {
 		system("cls");
 		car_id = -1;
-		std::cout << "Введите идентификатор автомобиля: " << std::endl << ">> ";
-		std::cin >> input_car_id;
-		try
-		{
-			car_id = stoi(input_car_id);
-		}
-		catch (std::exception ex)
-		{
-			std::cout << "Вы ввели не число!" << std::endl;
+		menu.InputCarId();
+		menu.NoneCarId(menu, car_base, 'A');
+		if (car_id < 1) {
 			system("pause");
+			menu.AdminMenu(menu, car_base);
 		}
-		if (car_id == -1) menu.AdminMenu(menu, car_base);
 		std::cout << "Старые данные об автомобиле" << std::endl;
 		car_base.PrintById(car_id);
 		std::cout << "Новые данные об автомобиле" << std::endl;
@@ -225,17 +236,9 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 	case 6:
 		system("cls");
 		car_id = -1;
-		std::cout << "Введите идентификатор" << std::endl << ">> ";
-		std::cin >> input_car_id;
-		try
-		{
-			car_id = stoi(input_car_id);
-		}
-		catch (std::exception ex)
-		{
-			std::cout << "Вы ввели не число!" << std::endl;
-			system("pause");
-		}
+		menu.InputCarId();
+		menu.NoneCarId(menu, car_base, 'A');
+		std::cout << "Элемент удалён" << std::endl;
 		car_base.DeleteCarById(car_id);
 		system("pause");
 		menu.AdminMenu(menu, car_base);
@@ -248,7 +251,7 @@ void Menu::AdminMenu(Menu& menu, CarBase& car_base)
 		menu.AdminMenu(menu, car_base);
 		break;
 	case 8:
-		menu.MenuSort(menu, car_base);
+		menu.MenuSort(menu, car_base, 'A');
 		break;
 	case 9:
 		system("cls");
@@ -327,8 +330,15 @@ void Menu::InputPassword(Menu& menu, CarBase& car_base)
 	std::cout << "Введите пароль: " << std::endl << ">> ";
 	std::cin >> input_password;
 	while (true) {
-		if (password == input_password) { system("cls"); password_status = true; break; };
-		std::cout << "Вы неверно ввели пароль, попробуйте снова (для выхода используйте quit): " << std::endl << ">> ";
+		if (password == input_password) 
+		{ 
+			system("cls"); 
+			password_status = true; 
+			break; 
+		}
+		std::cout << "Вы неверно ввели пароль. " <<\
+			"Попробуйте снова" <<  std::endl\
+			<< "Для выхода используйте quit" << std::endl << ">> ";
 		std::cin >> input_password;
 		if (input_password == "quit") menu.Start(menu, car_base);
 	}
@@ -431,7 +441,7 @@ void Menu::ChangeColor(Menu& menu, CarBase& car_base, const char access)
 	}
 }
 
-void Menu::MenuSort(Menu& menu, CarBase& car_base)
+void Menu::MenuSort(Menu& menu, CarBase& car_base, const char& access)
 {
 	system("cls");
 	menu.MenuName();
@@ -449,46 +459,47 @@ void Menu::MenuSort(Menu& menu, CarBase& car_base)
 	{
 		std::cout << "Вы ввели не число!" << std::endl;
 		system("pause");
-		menu.MenuSort(menu, car_base);
+		menu.MenuSort(menu, car_base, access);
 	}
 	switch (choice)
 	{
 	case 1:
-		menu.MenuTypeSort(menu, car_base, "plate_number");
+		menu.MenuTypeSort(menu, car_base, "plate_number", access);
 		break;
 	case 2:
-		menu.MenuTypeSort(menu, car_base, "surname");
+		menu.MenuTypeSort(menu, car_base, "surname", access);
 		break;
 	case 3:
-		menu.MenuTypeSort(menu, car_base, "name");
+		menu.MenuTypeSort(menu, car_base, "name", access);
 		break;
 	case 4:
-		menu.MenuTypeSort(menu, car_base, "father_name");
+		menu.MenuTypeSort(menu, car_base, "father_name", access);
 		break;
 	case 5:
-		menu.MenuTypeSort(menu, car_base, "brand");
+		menu.MenuTypeSort(menu, car_base, "brand", access);
 	case 6:
-		menu.MenuTypeSort(menu, car_base, "model");
+		menu.MenuTypeSort(menu, car_base, "model", access);
 		break;
 	case 7:
-		menu.MenuTypeSort(menu, car_base, "mileage");
+		menu.MenuTypeSort(menu, car_base, "mileage", access);
 		break;
 	case 8:
-		menu.MenuTypeSort(menu, car_base, "fines_quantity");
+		menu.MenuTypeSort(menu, car_base, "fines_quantity", access);
 		break;
 	case 9:
-		menu.AdminMenu(menu, car_base);
+		if (access == 'A') menu.AdminMenu(menu, car_base);
+		else menu.UserMenu(menu, car_base);
 		break;
 	default:
 		system("cls");
 		std::cout << "Нет такой команды!" << std::endl;
 		system("pause");
-		menu.MenuSort(menu, car_base);
+		menu.MenuSort(menu, car_base, access);
 		break;
 	}
 }
 
-void Menu::MenuTypeSort(Menu& menu, CarBase& car_base, std::string field_name)
+void Menu::MenuTypeSort(Menu& menu, CarBase& car_base, std::string field_name, const char& access)
 {
 	system("cls");
 	std::cout << "Сортировка по полю: "\
@@ -504,7 +515,7 @@ void Menu::MenuTypeSort(Menu& menu, CarBase& car_base, std::string field_name)
 	{
 		std::cout << "Вы ввели не число!" << std::endl;
 		system("pause");
-		menu.MenuTypeSort(menu, car_base, field_name);
+		menu.MenuTypeSort(menu, car_base, field_name, access);
 	}
 	CarBase sort_car_base = car_base;
 	switch (choice)
@@ -513,22 +524,22 @@ void Menu::MenuTypeSort(Menu& menu, CarBase& car_base, std::string field_name)
 		sort_car_base.GetSorted(field_name, 'U');
 		sort_car_base.AllPrint();
 		system("pause");
-		menu.MenuTypeSort(menu, car_base, field_name);
+		menu.MenuTypeSort(menu, car_base, field_name, access);
 		break;
 	case 2:
 		sort_car_base.GetSorted(field_name, 'L');
 		sort_car_base.AllPrint();
 		system("pause");
-		menu.MenuTypeSort(menu, car_base, field_name);
+		menu.MenuTypeSort(menu, car_base, field_name, access);
 		break;
 	case 3:
-		menu.MenuSort(menu, car_base);
+		menu.MenuSort(menu, car_base, access);
 		break;
 	default:
 		system("cls");
 		std::cout << "Нет такой команды!" << std::endl;
 		system("pause");
-		menu.MenuTypeSort(menu, car_base, field_name);
+		menu.MenuTypeSort(menu, car_base, field_name, access);
 		break;
 	}
 }

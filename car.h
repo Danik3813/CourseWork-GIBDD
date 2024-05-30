@@ -14,8 +14,10 @@ private:
 	int fines_quantity;
 public:
 	Car(int car_id, std::string plate_number,\
-		std::string name, std::string surname, std::string father_name,\
-		std::string brand, std::string model, int mileage, int fines_quantity);
+		std::string name, std::string surname,\
+		std::string father_name,\
+		std::string brand, std::string model,\
+		int mileage, int fines_quantity);
 	int GetCarId() const;
 	void SetCarId(int car_id);
 	std::string GetPlateNumber() const;
@@ -27,3 +29,4 @@ public:
 	int GetMileage() const;
 	int GetFinesQuantity() const;
 };
+

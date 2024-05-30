@@ -3,7 +3,8 @@ CarBase::CarBase()
 {
 	filename = "carbase.csv";
 	int car_id, mileage, fines_quantity;
-	std::string plate_number, name, surname, father_name, model, brand;
+	std::string plate_number, name, surname,\
+		father_name, model, brand;
 	std::ifstream file;
 	file.open(filename);
 	std::string car_line;
@@ -48,16 +49,14 @@ CarBase::CarBase()
 	}
 	catch (std::exception ex)
 	{
-		std::cout << "Проблемы со считыванием. Закройте программу принудительно или данные будут удалены!" << std::endl;
+		std::cout << "Проблемы со считыванием. " <<\
+			"Программа аварийно остановлена!" << std::endl;
 		system("pause");
+		exit(0);
 	}
 	file.close();
 }
 
-std::vector<Car> CarBase::GetCarBase() const
-{
-	return car_base;
-}
 
 size_t CarBase::GetSize() const
 {

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Car">
+    <Position X="1.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEgAAEAAASAAIAAQAAEAAAAAAAEAAESFAAAAAIKJAA=</HashCode>
+      <FileName>car.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarBase">
+    <Position X="4" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAABggCAAAAGCAAAAAAAAQAQAAAAIgAAAAABAAAA=</HashCode>
+      <FileName>carbase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Menu">
+    <Position X="6.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACgAAAACCAggAACEAAAABAAAAIAAAEMAgIAgAAAAA=</HashCode>
+      <FileName>menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

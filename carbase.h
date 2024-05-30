@@ -12,7 +12,6 @@ private:
 	std::string filename;
 public:
 	CarBase();
-	std::vector<Car> GetCarBase() const;
 	size_t GetSize() const;
 	std::string GetFileName() const;
 	void SaveToFile();

@@ -1,8 +1,10 @@
 #include "car.h"
 
 Car::Car(int car_id, std::string plate_number,\
-	std::string name, std::string surname, std::string father_name,\
-	std::string brand, std::string model, int mileage, int fines_quantity)
+	std::string name, std::string surname,\
+	std::string father_name,\
+	std::string brand, std::string model,\
+	int mileage, int fines_quantity)
 {
 	this->car_id = car_id;
 	this->plate_number = plate_number;
@@ -28,7 +30,7 @@ void Car::SetCarId(int car_id)
 std::string Car::GetPlateNumber() const
 {
 	return plate_number;
-}
+}	
 
 std::string Car::GetName() const
 {
