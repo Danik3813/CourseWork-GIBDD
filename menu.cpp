@@ -12,21 +12,12 @@ Menu::Menu()
 	//Чтение пароля
 	std::fstream file("config/password.txt");
 	std::getline(file, password);
-	/*if (password.length() == 0 && file.is_open()) {
-		password = "adm";
-		file << password;
-	}*/
 	file.close();
 	password_status = false;
 	//Чтение цвета
 	file.open("config/color.txt");
 	std::string color;
 	std::getline(file, color);
-	/*if (color.length() == 0)
-	{
-		color = "color 0F";
-		file << color;
-	}*/
 	file.close();
 	const char* p_color = color.c_str();
 	system(p_color);
